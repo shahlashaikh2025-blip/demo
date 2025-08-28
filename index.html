@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple E-commerce Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #333; color: #fff; padding: 10px; text-align: center; }
+    .products { display: flex; flex-wrap: wrap; justify-content: center; margin: 20px; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin: 10px; width: 200px; text-align: center; }
+    .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; }
+    button { padding: 6px 10px; margin-top: 6px; border: none; background: #28a745; color: #fff; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #218838; }
+    #cart { position: fixed; top: 0; right: 0; width: 250px; height: 100%; background: #f8f9fa; border-left: 1px solid #ccc; padding: 10px; overflow-y: auto; }
+    #cart h2 { text-align: center; }
+    .cart-item { border-bottom: 1px solid #ddd; padding: 5px 0; display: flex; justify-content: space-between; align-items: center; }
+    .remove { background: red; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Shop</h1>
+  </header>
+
+  <section class="products">
+    <div class="card">
+      <img src="https://via.placeholder.com/200x150" alt="Product 1">
+      <h3>Product 1</h3>
+      <p>$20</p>
+      <button onclick="addToCart('Product 1', 20)">Add to Cart</button>
+    </div>
+    <div class="card">
+      <img src="https://via.placeholder.com/200x150" alt="Product 2">
+      <h3>Product 2</h3>
+      <p>$35</p>
+      <button onclick="addToCart('Product 2', 35)">Add to Cart</button>
+    </div>
+    <div class="card">
+      <img src="https://via.placeholder.com/200x150" alt="Product 3">
+      <h3>Product 3</h3>
+      <p>$50</p>
+      <button onclick="addToCart('Product 3', 50)">Add to Cart</button>
+    </div>
+  </section>
+
+  <aside id="cart">
+    <h2>Cart</h2>
+    <div id="cart-items"></div>
+    <h3>Total: $<span id="total">0</span></h3>
+  </aside>
+
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      let item = cart.find(p => p.name === name);
+      if(item) {
+        item.qty++;
+      } else {
+        cart.push({name, price, qty:1});
+      }
+      renderCart();
+    }
+
+    function removeFromCart(name) {
+      cart = cart.filter(p => p.name !== name);
+      renderCart();
+    }
+
+    function renderCart() {
+      let cartItems = document.getElementById('cart-items');
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price * item.qty;
+        cartItems.innerHTML += `
+          <div class="cart-item">
+            ${item.name} (${item.qty}) - $${item.price * item.qty}
+            <button class="remove" onclick="removeFromCart('${item.name}')">X</button>
+          </div>
+        `;
+      });
+      document.getElementById('total').innerText = total;
+    }
+  </script>
+</body>
+</html>
